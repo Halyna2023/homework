@@ -5,7 +5,28 @@ function pow(x, y) {
     }
     return result;
   }
-  
+
 console.log(pow(2, 3)); // Виведе: 8
 console.log(pow(5, 4)); // Виведе: 625
 console.log(pow(7, 2)); // Виведе: 49
+
+//для негативних значень
+function pow(h, k) {
+  let result = 1;
+  const isNegativeExponent = k < 0;
+  const exponent = Math.abs(k);
+
+  for (let i = 0; i < exponent; i++) {
+    result *= h;
+  }
+
+  if (isNegativeExponent) {
+    result = 1 / result;
+  }
+
+  return result;
+}
+console.log(pow(2, 3));  //  8
+console.log(pow(2, -3)); //  0.125
+console.log(pow(5, 0));  //  1
+console.log(pow(-2, 3)); //  -8
