@@ -1,0 +1,53 @@
+// 1. Статус код 200
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+// 2. Content-Type — XML
+pm.test("Content-Type is text/xml", function () {
+    pm.expect(pm.response.headers.get("Content-Type")).to.include("text/xml");
+});
+
+// 3. Тіло відповіді не порожнє
+pm.test("Response body is not empty", function () {
+    pm.expect(pm.response.text()).to.not.be.empty;
+});
+
+// 4. Містить теги SOAP
+pm.test("Response contains <soap:Envelope>", function () {
+    pm.expect(pm.response.text()).to.include("<soap:Envelope");
+});
+
+// 5. Перевірка наявності кореневого тегу Body
+pm.test("Response contains <soap:Body>", function () {
+    pm.expect(pm.response.text()).to.include("<soap:Body");
+});
+
+// 6. Містить тег IsValidISBN13Response
+pm.test("Contains IsValidISBN13Response", function () {
+    pm.expect(pm.response.text()).to.include("IsValidISBN13Response");
+});
+
+// 7. Перевірка, що відповідь містить true або false
+pm.test("Response contains true or false", function () {
+    let text = pm.response.text();
+    pm.expect(text.includes("true") || text.includes("false")).to.be.true;
+});
+
+
+
+// 9. Заголовок Content-Length існує
+pm.test("Has Content-Length header", function () {
+    pm.expect(pm.response.headers.has("Content-Length")).to.be.true;
+});
+
+// 10. Час відповіді менше 1 секунди
+pm.test("Response time is less than 1000ms", function () {
+    pm.expect(pm.response.responseTime).to.be.below(1000);
+});
+
+// 8. Successful POST request
+
+pm.test("Successful POST request", function () {
+    pm.expect(pm.response.code).to.be.oneOf([200, 201]);
+});

@@ -1,0 +1,100 @@
+// 1. Перевірка статус-коду
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+// 2. Content-Type є text/xml
+pm.test("Content-Type is text/xml", function () {
+    pm.expect(pm.response.headers.get("Content-Type")).to.include("text/xml");
+});
+
+// 3. Час відповіді < 1000 мс
+pm.test("Response time is less than 1000ms", function () {
+    pm.expect(pm.response.responseTime).to.be.below(1000);
+});
+
+// 4. Тіло відповіді не порожнє
+pm.test("Response body is not empty", function () {
+    pm.expect(pm.response.text()).to.not.be.empty;
+});
+
+// 5. Містить тег <soap:Envelope>
+pm.test("Contains <soap:Envelope>", function () {
+    pm.expect(pm.response.text()).to.include("<soap:Envelope");
+});
+
+// 6. Містить тег <soap:Body>
+pm.test("Contains <soap:Body>", function () {
+    pm.expect(pm.response.text()).to.include("<soap:Body");
+});
+
+// 7. Містить тег IsValidISBN10Response
+pm.test("Contains IsValidISBN10Response", function () {
+    pm.expect(pm.response.text()).to.include("IsValidISBN10Response");
+});
+
+
+
+// 8. Є заголовок Content-Length
+pm.test("Has Content-Length header", function () {
+    pm.expect(pm.response.headers.has("Content-Length")).to.be.true;
+});
+
+// 9. Довжина тіла відповіді > 100 символів
+pm.test("Response body length is greater than 100 characters", function () {
+    pm.expect(pm.response.text().length).to.be.above(100);
+});
+
+// Негативні тести
+// 1. Status code не повинен бути 200 при неправильному запиті (наприклад, порожній ISBN)
+pm.test("Status code is not 200 for invalid input", function () {
+    pm.expect(pm.response.code).to.not.eql(200);
+});
+
+// 2. Очікуємо помилку або fault у тілі відповіді
+pm.test("Response contains SOAP Fault or error", function () {
+    pm.expect(pm.response.text()).to.include("Fault") || pm.expect(pm.response.text()).to.include("error");
+});
+
+// 3. Content-Type може бути не XML у разі помилки
+pm.test("Content-Type is not text/xml for bad request", function () {
+    pm.expect(pm.response.headers.get("Content-Type")).to.not.eql("text/xml");
+});
+
+// 4. Перевірка, що результату `IsValidISBN10Result` немає
+pm.test("IsValidISBN10Result does not exist", function () {
+    let jsonObj = xml2Json(pm.response.text());
+    let result = jsonObj?.["soap:Envelope"]?.["soap:Body"]?.["IsValidISBN10Response"]?.["IsValidISBN10Result"];
+    pm.expect(result).to.be.undefined;
+});
+
+// 5. Тіло відповіді містить помилкове повідомлення або faultcode
+pm.test("Response contains faultcode", function () {
+    pm.expect(pm.response.text()).to.include("faultcode");
+});
+
+// 6. Відсутність тегу <IsValidISBN10Response> у разі помилки
+pm.test("IsValidISBN10Response tag is missing", function () {
+    pm.expect(pm.response.text()).to.not.include("IsValidISBN10Response");
+});
+
+// 7. Перевірка на відсутність <IsValidISBN10Result> у відповіді
+pm.test("IsValidISBN10Result tag is missing", function () {
+    pm.expect(pm.response.text()).to.not.include("IsValidISBN10Result");
+});
+
+// 8. Час відповіді не повинен бути менше 100 мс (сервер обробляє помилку)
+pm.test("Response time is realistic (over 100ms)", function () {
+    pm.expect(pm.response.responseTime).to.be.above(100);
+});
+
+// 9. Довжина тіла відповіді не повинна бути великою (для fault зазвичай відповідь коротша)
+pm.test("Response body length is under 1000 characters", function () {
+    pm.expect(pm.response.text().length).to.be.below(1000);
+});
+
+// 10. Відповідь не містить ключове слово true або false (бо результат не обчислено)
+pm.test("No 'true' or 'false' value in response", function () {
+    pm.expect(pm.response.text()).to.not.include("true");
+    pm.expect(pm.response.text()).to.not.include("false");
+});
