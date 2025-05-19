@@ -1,0 +1,408 @@
+{
+	"info": {
+		"_postman_id": "045ce217-d209-42b1-b41c-6822a4bde652",
+		"name": "Practice08/2024",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30294288"
+	},
+	"item": [
+		{
+			"name": "CarsBrands",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check that the carBrands >=3\", function () {\r",
+							"    var jsonData = pm.response.json().data;\r",
+							" //pm.expect(jsonData.lenght).to.be.at.least(3);\r",
+							"    pm.expect(jsonData.value).to.eql(jsonData.color);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"URL\", \"https://qauto.forstudy.space/api/\");\r",
+							"let userData={\r",
+							"  \"name\": \"Ann\",\r",
+							"  \"lastName\": \"Dou\",\r",
+							"  \"email\": \"test563@test.com\",\r",
+							"  \"password\": \"Qwerty12345\",\r",
+							"  \"repeatPassword\": \"Qwerty12345\"\r",
+							"}\r",
+							"pm.collectionVariables.set(\"userData\", userData);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://qauto.forstudy.space/api/cars/brands",
+					"protocol": "https",
+					"host": [
+						"qauto",
+						"forstudy",
+						"space"
+					],
+					"path": [
+						"api",
+						"cars",
+						"brands"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.collectionVariables.set(\"userId\",pm.response.json().data.userId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var userData = pm.collectionVariables.get(\"userData\");\r",
+							"pm.collectionVariables.set(\"userName\", userData.name);\r",
+							"pm.collectionVariables.set(\"lastName\", userData.lastName);\r",
+							"pm.collectionVariables.set(\"email\", userData.email);\r",
+							"pm.collectionVariables.set(\"password\", userData.password);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{{userName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"repeatPassword\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}auth/signup",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var userData = pm.collectionVariables.get(\"userData\");  \r",
+							"var jsonData = pm.response.json().data;\r",
+							"pm.collectionVariables.set(\"userId\", pm.response.json().data.userId);\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"User name is \" + userData.name, function () {\r",
+							"    pm.expect(jsonData.name).to.eql(userData.name);\r",
+							"    pm.expect(jsonData.name).to.exist;\r",
+							"});\r",
+							"pm.test(\"User lastName is \" + userData.lastName, function () {\r",
+							"    pm.expect(jsonData.lastName).to.eql(userData.lastName);\r",
+							"    pm.expect(jsonData.lastName).to.exist;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User userId is \" + jsonData.userId, function () {\r",
+							"    pm.expect(jsonData.userId).to.eql(pm.collectionVariables.get(\"userId\"));\r",
+							"    pm.expect(jsonData.userId).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}users/profile",
+					"host": [
+						"{{URL}}users"
+					],
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}auth/logout",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User signin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData = pm.response.json().data;\r",
+							"pm.test(\"User userId is \" + jsonData.userId, function () {\r",
+							"    pm.expect(jsonData.userId).to.eql(pm.collectionVariables.get(\"userId\"));\r",
+							"    pm.expect(jsonData.userId).to.exist;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var userData = pm.collectionVariables.get(\"userData\");\r",
+							"pm.collectionVariables.set(\"email\", userData.email);\r",
+							"pm.collectionVariables.set(\"password\", userData.password);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"remember\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}auth/signin",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCurrentUserCars",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check the amount user cars >=0\", function () {\r",
+							"    var jsonData = pm.response.json().data;\r",
+							"    pm.expect(jsonData.length).to.be.at.least(0);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}cars/",
+					"host": [
+						"{{URL}}cars"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeletUsers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}users",
+					"host": [
+						"{{URL}}users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl1",
+			"value": "https://fakerestapi.azurewebsites.net"
+		},
+		{
+			"key": "URL",
+			"value": "https://qauto.forstudy.space/api/"
+		},
+		{
+			"key": "userData",
+			"value": ""
+		},
+		{
+			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		}
+	]
+}
